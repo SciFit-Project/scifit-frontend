@@ -25,7 +25,7 @@ export default function Page() {
           await createUser();
         }
         saveUser();
-        // window.location.href = "/home";
+        window.location.href = "/home";
       });
     }
   }, []);
