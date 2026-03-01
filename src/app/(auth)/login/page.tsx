@@ -1,9 +1,11 @@
 "use client";
-
-import { signInWithGoogle } from "@/lib/auth/auth";
+import LoginForm from "@/features/auth/components/LoginForm";
+import { useAuth } from "@/features/auth/hooks/use-auth";
 import { BicepsFlexed } from "lucide-react";
 
 export default function LoginPage() {
+
+    const { signInWithGoogle } = useAuth();
     return (
         <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center relative overflow-hidden">
 
@@ -32,6 +34,7 @@ export default function LoginPage() {
                         </p>
                     </div>
 
+                    <LoginForm />
                     {/* Divider line */}
                     <div className="w-12 h-px bg-linear-to-r from-transparent via-white/20 to-transparent mx-auto mb-8" />
 
