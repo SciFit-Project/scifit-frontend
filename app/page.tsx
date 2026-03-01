@@ -1,8 +1,7 @@
 "use client";
-
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { createUser } from "@/lib/auth/auth";
+import { GoogleSync } from "@/lib/auth/auth";
 
 export default function Page() {
   useEffect(() => {
@@ -22,7 +21,7 @@ export default function Page() {
       }).then(() => {
         //  Save to database
         const saveUser = async () => {
-          await createUser();
+          await GoogleSync();
         }
         saveUser();
         window.location.href = "/home";

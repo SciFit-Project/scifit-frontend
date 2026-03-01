@@ -35,14 +35,14 @@ export const getUser = async () => {
     };
 }
 
-export const createUser = async () => {
+export const GoogleSync = async () => {
     const { data: { user } } = await supabase.auth.getUser();
 
-    const res = await api.url("/api/auth/login").post({
+    const res = await api.url("/api/auth/google-sync").post({
         id: user?.id,
         email: user?.email,
         avatar: user?.user_metadata.avatar_url,
-        name: user?.user_metadata.full_name,
+        fullname: user?.user_metadata.full_name,
     }).json();
     
     if(!res) return
