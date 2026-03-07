@@ -1,5 +1,5 @@
 import wretch from "wretch";
-import { supabase } from "../supabaseClient";
+import { supabase } from "../config/db/supabaseClient";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 

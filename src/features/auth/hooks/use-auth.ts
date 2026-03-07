@@ -1,5 +1,6 @@
+"use client"
 import { SignupInput } from "./../schema/auth.schema";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/config/db/supabaseClient";
 import { GoogleSyncLogin, GoogleSyncRegister, LoginByEmail, SignupByEmail } from "../services/auth";
 import { toast } from "sonner";
 import { LoginInput } from "../schema/auth.schema";

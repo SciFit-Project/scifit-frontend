@@ -1,4 +1,4 @@
-import api from "@/lib/api/api";
+import api from "@/api/api";
 import { LoginInput, SignupInput } from "../schema/auth.schema";
 
 export const GoogleSyncLogin = async (user: any) => {

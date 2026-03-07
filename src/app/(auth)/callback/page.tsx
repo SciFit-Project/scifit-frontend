@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/config/db/supabaseClient";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
