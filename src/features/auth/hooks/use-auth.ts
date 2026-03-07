@@ -1,5 +1,6 @@
+"use client"
 import { SignupInput } from "./../schema/auth.schema";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/config/db/supabaseClient";
 import { GoogleSyncLogin, GoogleSyncRegister, LoginByEmail, SignupByEmail } from "../services/auth";
 import { toast } from "sonner";
 import { LoginInput } from "../schema/auth.schema";
@@ -12,7 +13,7 @@ export const useAuth = () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/callback?type=login`,
+        redirectTo: `${window.location.origin}/callback?type=login`,
       },
     });
     if (error) throw error;
@@ -23,7 +24,7 @@ export const useAuth = () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/callback?type=register`,
+        redirectTo: `${window.location.origin}/callback?type=register`,
       },
     });
     if (error) throw error;

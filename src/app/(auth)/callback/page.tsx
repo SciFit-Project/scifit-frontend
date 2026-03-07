@@ -1,0 +1,63 @@
+"use client";
+import { useEffect, useState } from "react";
+import { supabase } from "@/config/db/supabaseClient";
+import { useAuth } from "@/features/auth/hooks/use-auth";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+export default function AuthCallbackPage() {
+  const { LoginGoogleSync, RegisterGoogleSync } = useAuth();
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleAuth = async () => {
+      try {
+        const searchParams = new URLSearchParams(window.location.search);
+        const type = searchParams.get("type");
+        const hash = window.location.hash;
+        if (!hash) return;
+
+        const params = new URLSearchParams(hash.substring(1));
+        const access_token = params.get("access_token");
+        const refresh_token = params.get("refresh_token");
+
+        if (access_token && refresh_token) {
+          const { error: sessionError } = await supabase.auth.setSession({
+            access_token,
+            refresh_token,
+          });
+
+          if (sessionError) throw sessionError;
+
+          if (type === "register") {
+            await RegisterGoogleSync();
+          } else {
+            await LoginGoogleSync();
+          }
+
+            router.replace("/dashboard");
+        }
+      } catch (err: any) {
+        console.error("Auth error:", err);
+        setError("Login failed please try again...");
+        toast.error("Login failed please try again...");
+      }
+    };
+
+    handleAuth();
+  }, [LoginGoogleSync, router]);
+
+  if (error) return <div className="p-4 text-red-500">{error}</div>;
+
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <h2 className="text-xl font-semibold tracking-tight text-white animate-pulse">
+        Authenticating
+      </h2>
+      <p className="text-sm text-gray-400">
+        Please wait while we secure your session...
+      </p>
+    </div>
+  );
+}

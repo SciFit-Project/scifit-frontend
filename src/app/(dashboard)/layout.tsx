@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
-import { AuthGuard } from "@/lib/auth/auth-guard";
+import { AuthGuard } from "@/features/auth/components/auth-guard";
 
 export const metadata: Metadata = {
   title: "Create Next App",
