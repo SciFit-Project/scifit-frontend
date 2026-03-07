@@ -12,7 +12,7 @@ export const useAuth = () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/callback?type=login`,
+        redirectTo: `${window.location.origin}/callback?type=login`,
       },
     });
     if (error) throw error;
@@ -23,7 +23,7 @@ export const useAuth = () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/callback?type=register`,
+        redirectTo: `${window.location.origin}/callback?type=register`,
       },
     });
     if (error) throw error;
