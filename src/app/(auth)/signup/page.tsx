@@ -5,7 +5,7 @@ import { useAuth } from "@/features/auth/hooks/use-auth";
 import { BicepsFlexed } from "lucide-react";
 
 const page = () => {
-    const { signInWithGoogle } = useAuth();
+    const { registerWithGoogle } = useAuth();
     return (
         <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center relative overflow-hidden">
 
@@ -40,7 +40,7 @@ const page = () => {
                     <span className="block w-full h-px my-2 bg-linear-90 bg-transparent via-white/20"></span>
                     {/* Google Button */}
                     <button
-                        onClick={signInWithGoogle}
+                        onClick={registerWithGoogle}
                         className="w-full flex items-center justify-center gap-3 py-3 px-5 rounded-xl border border-white/10 bg-white/4 hover:bg-white/8 hover:border-white/20 transition-all duration-200 group mt-5"
                         style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.3)" }}
                     >

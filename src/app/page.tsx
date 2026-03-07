@@ -6,13 +6,15 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export default function AuthCallbackPage() {
-  const { LoginGoogleSync } = useAuth();
+  const { LoginGoogleSync, RegisterGoogleSync } = useAuth();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const handleAuth = async () => {
       try {
+        const searchParams = new URLSearchParams(window.location.search);
+        const type = searchParams.get("type");
         const hash = window.location.hash;
         if (!hash) return;
 
@@ -28,7 +30,11 @@ export default function AuthCallbackPage() {
 
           if (sessionError) throw sessionError;
 
-          await LoginGoogleSync();
+          if (type === 'register') {
+            await RegisterGoogleSync();
+          } else {
+            await LoginGoogleSync();
+          }
 
           router.replace("/dashboard");
         }

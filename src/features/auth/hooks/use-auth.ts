@@ -1,6 +1,6 @@
 import { SignupInput } from "./../schema/auth.schema";
 import { supabase } from "@/lib/supabaseClient";
-import { GoogleSync, LoginByEmail, SignupByEmail } from "../services/auth";
+import { GoogleSyncLogin, GoogleSyncRegister, LoginByEmail, SignupByEmail } from "../services/auth";
 import { toast } from "sonner";
 import { LoginInput } from "../schema/auth.schema";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,18 @@ export const useAuth = () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/callback`,
+        redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/callback?type=login`,
+      },
+    });
+    if (error) throw error;
+    return data;
+  };
+
+  const registerWithGoogle = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/callback?type=register`,
       },
     });
     if (error) throw error;
@@ -29,7 +40,19 @@ export const useAuth = () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      const response = await GoogleSync(user);
+      const response = await GoogleSyncLogin(user);
+      if (!response) return;
+      return response;
+    } catch (e: any) {
+      toast.error(JSON.parse(e.message).message);
+    }
+  };
+  const RegisterGoogleSync = async () => {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const response = await GoogleSyncRegister(user);
       if (!response) return;
       return response;
     } catch (e: any) {
@@ -59,5 +82,5 @@ export const useAuth = () => {
     }
   };
 
-  return { signInWithGoogle, signOutGoogle, LoginGoogleSync, EmailLogin, EmailSignUp };
+  return { signInWithGoogle, signOutGoogle, LoginGoogleSync, EmailLogin, EmailSignUp, registerWithGoogle, RegisterGoogleSync };
 };
