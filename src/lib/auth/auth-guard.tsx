@@ -5,26 +5,29 @@ import { useRouter } from "next/navigation";
 import { getSession } from "../api/api";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
-    const router = useRouter();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        const supaToken = getSession()
-        if (!token || !supaToken) {
-            router.replace("/login");
-        } else {
-            setIsAuthenticated(true);
-        }
-    }, [router]);
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = localStorage.getItem("token");
+      const supaToken = await getSession();
+      if (token || supaToken) {
+        setIsAuthenticated(true);
+      } else {
+        router.replace("/login");
+      }
+    };
+    fetchToken();
+  }, [router]);
 
-    if (!isAuthenticated) {
-        return (
-            <div className="flex h-screen w-full items-center justify-center">
-                <p>Loading...</p>
-            </div>
-        );
-    }
+  if (!isAuthenticated) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
-    return <>{children}</>;
+  return <>{children}</>;
 }
