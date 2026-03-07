@@ -1,10 +1,10 @@
 "use client";
 import LoginForm from "@/features/auth/components/LoginForm";
+import SignupForm from "@/features/auth/components/SignupForm";
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { BicepsFlexed } from "lucide-react";
 
-export default function LoginPage() {
-
+const page = () => {
     const { signInWithGoogle } = useAuth();
     return (
         <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center relative overflow-hidden">
@@ -16,28 +16,28 @@ export default function LoginPage() {
                     style={{ boxShadow: "0 0 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)" }}
                 >
                     {/* Logo mark */}
-                    <div className="flex justify-center mb-8">
+                    <div className="flex justify-center">
                         <div className="w-10 h-10 rounded-xl bg-linear-to-br from-white/20 to-white/5 border border-white/10 flex items-center justify-center">
                             <BicepsFlexed color="white" />
                         </div>
                     </div>
 
                     {/* Heading */}
-                    <div className="text-center mb-8">
+                    <div className="text-center">
                         <h1
                             className="text-white text-2xl font-light tracking-[-0.02em] mb-2"
                         >
                             Hello Welcome
                         </h1>
                         <p className="text-white/30 text-sm tracking-wide" style={{ fontSize: "11px", letterSpacing: "0.08em" }}>
-                            SIGN IN TO CONTINUE
+                            SIGN UP TO CONTINUE
                         </p>
                     </div>
 
-                    <LoginForm />
+                    <SignupForm />
 
                     {/* line */}
-                    <span className="block w-full h-px my-5 bg-linear-90 bg-transparent via-white/20"></span>
+                    <span className="block w-full h-px my-2 bg-linear-90 bg-transparent via-white/20"></span>
                     {/* Google Button */}
                     <button
                         onClick={signInWithGoogle}
@@ -58,10 +58,10 @@ export default function LoginPage() {
                         </span>
                     </button>
 
-                    <h1 className="mt-4 text-center text-white text-sm">Don't have account <a href="/signup" className="font-bold">Sign up</a></h1>
+                    <h1 className="mt-4 text-center text-white text-sm">I have account <a href="/login" className="font-bold">Login</a></h1>
 
                     {/* Footer note */}
-                    <p className="text-center text-white/20 text-[10px] mt-6 leading-relaxed">
+                    <p className="text-center text-white/20 text-[10px] mt-3 leading-relaxed">
                         By continuing, you agree to our<br />
                         <span className="text-white/40 hover:text-white/60 cursor-pointer transition-colors">Terms</span>
                         {" & "}
@@ -72,3 +72,5 @@ export default function LoginPage() {
         </div>
     );
 }
+
+export default page

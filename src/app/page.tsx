@@ -30,7 +30,7 @@ export default function AuthCallbackPage() {
 
           await LoginGoogleSync();
 
-          // router.replace("/");
+          router.replace("/dashboard");
         }
       } catch (err: any) {
         console.error("Auth error:", err);

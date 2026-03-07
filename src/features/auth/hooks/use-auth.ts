@@ -1,6 +1,6 @@
-import api from "@/lib/api/api";
+import { SignupInput } from "./../schema/auth.schema";
 import { supabase } from "@/lib/supabaseClient";
-import { GoogleSync, LoginByEmail } from "../services/auth";
+import { GoogleSync, LoginByEmail, SignupByEmail } from "../services/auth";
 import { toast } from "sonner";
 import { LoginInput } from "../schema/auth.schema";
 import { useRouter } from "next/navigation";
@@ -42,12 +42,22 @@ export const useAuth = () => {
     try {
       const response = await LoginByEmail(data);
       localStorage.setItem("token", response.token);
-      toast.success("Login Success");
+      toast.success("Login success");
       router.push("/dashboard");
     } catch (e: any) {
       toast.error(JSON.parse(e.message).message);
     }
   };
 
-  return { signInWithGoogle, signOutGoogle, LoginGoogleSync, EmailLogin };
+  const EmailSignUp = async (data: SignupInput) => {
+    try {
+      await SignupByEmail(data);
+      toast.success("Sign up success. Please login.");
+      router.push("/login");
+    } catch (e: any) {
+      toast.error(JSON.parse(e.message).message);
+    }
+  };
+
+  return { signInWithGoogle, signOutGoogle, LoginGoogleSync, EmailLogin, EmailSignUp };
 };

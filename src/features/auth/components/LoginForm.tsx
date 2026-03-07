@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form"
 import { LoginInput, loginSchema } from "../schema/auth.schema"
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from "react";
-import { toast } from "sonner";
 import { useAuth } from "../hooks/use-auth";
 
 const LoginForm = () => {
@@ -38,8 +37,11 @@ const LoginForm = () => {
                 )}
             </div>
             <button
-                className="mt-2 w-full gap-3 py-1 px-5 rounded-md border border-white/10 bg-white/4 hover:bg-white/8 hover:border-white/20 duration-200 "
-                type="submit" >Login</button>
+                disabled={isLoading}
+                className={`mt-2 w-full gap-3 py-1 px-5 rounded-md border border-white/10 bg-white/4 hover:bg-white/8 hover:border-white/20 duration-200 ${isLoading? 'opacity-30': ""}`}
+                type="submit" >
+                {isLoading ? "Logging in" : "Login"}
+            </button>
         </form>
     )
 }
