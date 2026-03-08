@@ -18,3 +18,20 @@ export const loginSchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 export type LoginInput = z.infer<typeof loginSchema>;
+
+export interface UserResponse {
+  success: boolean;
+  user: {
+    email: string;
+    fullName: string;
+    avatarUrl: string;
+  };
+}
+export interface RefreshResponse {
+  accessToken: string;
+  user: {
+    email: string;
+    fullName: string;
+    avatarUrl: string;
+  };
+}

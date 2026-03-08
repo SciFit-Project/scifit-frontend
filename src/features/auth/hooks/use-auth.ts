@@ -1,13 +1,24 @@
-"use client"
-import { SignupInput } from "./../schema/auth.schema";
+"use client";
+import { SignupInput, UserResponse } from "./../schema/auth.schema";
 import { supabase } from "@/config/db/supabaseClient";
-import { GoogleSyncLogin, GoogleSyncRegister, LoginByEmail, SignupByEmail } from "../services/auth";
+import {
+  GetUserProfile,
+  GoogleSyncLogin,
+  GoogleSyncRegister,
+  LoginByEmail,
+  SignupByEmail,
+  UserLogout,
+} from "../services/auth";
 import { toast } from "sonner";
 import { LoginInput } from "../schema/auth.schema";
 import { useRouter } from "next/navigation";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthStore } from "../store/use-auth-store";
 
 export const useAuth = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const { setAccessToken, logout } = useAuthStore();
 
   const signInWithGoogle = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -31,11 +42,20 @@ export const useAuth = () => {
     return data;
   };
 
-  const signOutGoogle = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-    window.location.reload();
+  const signOut = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      logout();
+      queryClient.clear();
+      const response = await UserLogout();
+      if (!response) return toast.success("Logout failed");
+      window.location.reload();
+    } catch (error: any) {
+      toast.error(error.message || "Logout failed");
+    }
   };
+
   const LoginGoogleSync = async () => {
     try {
       const {
@@ -48,6 +68,7 @@ export const useAuth = () => {
       toast.error(JSON.parse(e.message).message);
     }
   };
+
   const RegisterGoogleSync = async () => {
     try {
       const {
@@ -61,11 +82,12 @@ export const useAuth = () => {
     }
   };
 
-  // Auth Email
   const EmailLogin = async (data: LoginInput) => {
     try {
-      const response = await LoginByEmail(data);
-      localStorage.setItem("token", response.token);
+      const { accessToken } = await LoginByEmail(data);
+
+      setAccessToken(accessToken);
+
       toast.success("Login success");
       router.push("/dashboard");
     } catch (e: any) {
@@ -83,5 +105,21 @@ export const useAuth = () => {
     }
   };
 
-  return { signInWithGoogle, signOutGoogle, LoginGoogleSync, EmailLogin, EmailSignUp, registerWithGoogle, RegisterGoogleSync };
+  const UserProfile = useQuery<UserResponse>({
+    queryKey: ["me"],
+    queryFn: GetUserProfile,
+    staleTime: 1000 * 60 * 10,
+    retry: false,
+  });
+
+  return {
+    signInWithGoogle,
+    signOut,
+    LoginGoogleSync,
+    EmailLogin,
+    EmailSignUp,
+    registerWithGoogle,
+    RegisterGoogleSync,
+    UserProfile,
+  };
 };

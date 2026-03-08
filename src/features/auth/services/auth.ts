@@ -1,5 +1,5 @@
 import api from "@/api/api";
-import { LoginInput, SignupInput } from "../schema/auth.schema";
+import { LoginInput, SignupInput, UserResponse } from "../schema/auth.schema";
 
 export const GoogleSyncLogin = async (user: any) => {
   const response = await api
@@ -42,5 +42,20 @@ export const SignupByEmail = async (data: SignupInput) => {
       password: data.password,
     })
     .json<any>();
+  return response;
+};
+
+export const GetUserProfile = async () => {
+  const response = await api.url("/api/auth/me").get().json<UserResponse>();
+  return response;
+};
+
+export const RefreshToken = async () => {
+  const response = await api.url("/api/auth/refresh").post().json<any>();
+  return response;
+};
+
+export const UserLogout = async () => {
+  const response = await api.url("/api/auth/logout").post().json<any>();
   return response;
 };
