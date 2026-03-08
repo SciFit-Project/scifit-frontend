@@ -23,6 +23,7 @@ import {
 import { useAuth } from "@/features/auth/hooks/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 const AppSidebar = () => {
   const pathname = usePathname();
@@ -45,7 +46,7 @@ const AppSidebar = () => {
     },
     {
       name: "Workout",
-      url: "/orkout",
+      url: "/workout",
       icon: Dumbbell,
     },
     {
@@ -55,7 +56,7 @@ const AppSidebar = () => {
     },
     {
       name: "Profile",
-      url: "/prifile",
+      url: "/profile",
       icon: CircleUser,
     },
   ];
@@ -95,10 +96,10 @@ const AppSidebar = () => {
                 isActive={pathname === project.url}
                 className="data-[active=true]:bg-[#3579E5]/10 data-[active=true]:text-[#3579E5]"
               >
-                <a href={project.url} className="p-5">
+                <Link href={project.url} className="p-5">
                   <Icon />
                   <span>{project.name}</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
             );
           })}

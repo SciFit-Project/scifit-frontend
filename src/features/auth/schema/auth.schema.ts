@@ -27,3 +27,11 @@ export interface UserResponse {
     avatarUrl: string;
   };
 }
+export interface RefreshResponse {
+  accessToken: string;
+  user: {
+    email: string;
+    fullName: string;
+    avatarUrl: string;
+  };
+}

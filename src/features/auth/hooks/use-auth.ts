@@ -7,15 +7,18 @@ import {
   GoogleSyncRegister,
   LoginByEmail,
   SignupByEmail,
+  UserLogout,
 } from "../services/auth";
 import { toast } from "sonner";
 import { LoginInput } from "../schema/auth.schema";
 import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuthStore } from "../store/use-auth-store";
 
 export const useAuth = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { setAccessToken, logout } = useAuthStore();
 
   const signInWithGoogle = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -43,11 +46,11 @@ export const useAuth = () => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-
-      localStorage.removeItem("token");
+      logout();
       queryClient.clear();
+      const response = await UserLogout();
+      if (!response) return toast.success("Logout failed");
       window.location.reload();
-
     } catch (error: any) {
       toast.error(error.message || "Logout failed");
     }
@@ -81,8 +84,10 @@ export const useAuth = () => {
 
   const EmailLogin = async (data: LoginInput) => {
     try {
-      const response = await LoginByEmail(data);
-      localStorage.setItem("token", response.token);
+      const { accessToken } = await LoginByEmail(data);
+
+      setAccessToken(accessToken);
+
       toast.success("Login success");
       router.push("/dashboard");
     } catch (e: any) {

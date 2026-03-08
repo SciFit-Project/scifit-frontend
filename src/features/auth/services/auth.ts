@@ -45,7 +45,17 @@ export const SignupByEmail = async (data: SignupInput) => {
   return response;
 };
 
-export const GetUserProfile = async()=>{
+export const GetUserProfile = async () => {
   const response = await api.url("/api/auth/me").get().json<UserResponse>();
-  return response
-}
+  return response;
+};
+
+export const RefreshToken = async () => {
+  const response = await api.url("/api/auth/refresh").post().json<any>();
+  return response;
+};
+
+export const UserLogout = async () => {
+  const response = await api.url("/api/auth/logout").post().json<any>();
+  return response;
+};

@@ -3,31 +3,51 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSession } from "../../../api/api";
+import { useAuthStore } from "../store/use-auth-store";
+import { RefreshToken } from "../services/auth";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { accessToken, setAccessToken } = useAuthStore();
 
   useEffect(() => {
     const fetchToken = async () => {
-      const token = localStorage.getItem("token");
       const supaToken = await getSession();
-      if (token || supaToken) {
+
+      if (accessToken || supaToken) {
         setIsAuthenticated(true);
-      } else {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await RefreshToken();
+        if (setAccessToken && response.accessToken) {
+          setAccessToken(response.accessToken);
+          setIsLoading(false);
+          setIsAuthenticated(true);
+        } else {
+          throw new Error("Refresh failed");
+        }
+      } catch (error) {
         router.replace("/login");
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchToken();
-  }, [router]);
+  }, []);
 
-  if (!isAuthenticated) {
+  if (isLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <p>Loading...</p>
       </div>
     );
   }
+  if (!isAuthenticated) return null;
 
   return <>{children}</>;
 }
