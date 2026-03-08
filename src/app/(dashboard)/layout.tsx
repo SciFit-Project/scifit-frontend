@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import { AuthGuard } from "@/features/auth/components/auth-guard";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import AppSidebar from "@/components/layouts/AppSidebar";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,7 +17,12 @@ export default function RootLayout({
   return (
     <AuthGuard>
       <Toaster />
-      {children}
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full">
+          <AppSidebar />
+          <main className="flex-1 p-6">{children}</main>
+        </div>
+      </SidebarProvider>
     </AuthGuard>
   );
 }
