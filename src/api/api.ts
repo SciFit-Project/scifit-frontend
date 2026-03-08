@@ -8,7 +8,8 @@ export const getSession = async () => {
     const {
       data: { session },
     } = await supabase.auth.getSession();
-    return session?.access_token || null;
+    const token = localStorage.getItem("token")
+    return session?.access_token || token || null;
   } catch (error) {
     return null;
   }
